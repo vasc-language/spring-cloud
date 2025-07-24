@@ -1,0 +1,23 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: order-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 117.72.211.70:8848
+        # 停掉 nacos 删除 nacos 目录下的 /data/protocol/raft 信息，里面会保存应用实例的元数据信息
+#        ephemeral: false # 将order-service 设置为非临时变量
+#        namespace: 7b082872-2dbe-4d51-98a3-f2a26b987591
+    # 由于Spring Cloud LoadBalance 组件自身有负载均衡配置方式，所以不支持 Nacos 的权重属性配置，所以需要开启 Nacos 的负载均衡策略，让权重配置生效
+    loadbalancer:
+      nacos:
+        enabled: true
+  profiles:
+    active: @profile.name@
+# 设置 Mybatis 的 xml 保存路径
+mybatis:
+  configuration: # 配置打印 MyBatis 执行的 SQL
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true  #自动驼峰转换
