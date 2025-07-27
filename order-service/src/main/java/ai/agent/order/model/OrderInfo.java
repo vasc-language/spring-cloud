@@ -1,5 +1,6 @@
 package ai.agent.order.model;
 
+import ai.agent.product.model.ProductInfo;
 import lombok.Data;
 
 import java.util.Date;

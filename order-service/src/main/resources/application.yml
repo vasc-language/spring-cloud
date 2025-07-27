@@ -21,3 +21,44 @@ mybatis:
   configuration: # 配置打印 MyBatis 执行的 SQL
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true  #自动驼峰转换
+
+# Feign 客户端配置
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 10000  # 连接超时时间 10秒
+        readTimeout: 30000     # 读取超时时间 30秒
+        loggerLevel: FULL      # 开启详细日志
+      product-service:
+        connectTimeout: 8000   # 针对 product-service 的连接超时 8秒
+        readTimeout: 20000     # 针对 product-service 的读取超时 20秒
+        loggerLevel: FULL
+  hystrix:
+    enabled: true            # 启用熔断器
+  compression:
+    request:
+      enabled: true          # 启用请求压缩
+    response:
+      enabled: true          # 启用响应压缩
+
+# Hystrix 熔断器配置
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 30000  # 熔断器超时时间 30秒
+    ProductApi#p1(Integer):
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 20000  # 针对 p1 方法的超时时间 20秒
+
+# Ribbon 负载均衡配置
+ribbon:
+  ConnectTimeout: 8000       # Ribbon 连接超时
+  ReadTimeout: 20000         # Ribbon 读取超时
+  MaxAutoRetries: 1          # 最大重试次数
+  MaxAutoRetriesNextServer: 2 # 最大重试下一个服务器次数

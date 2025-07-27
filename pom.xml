@@ -5,11 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ai.agent</groupId>
-    <artifactId>spring-cloud-nacos</artifactId>
+    <artifactId>spring-cloud-gateway</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>order-service</module>
         <module>product-service</module>
+        <module>product-api</module>
+        <module>gateway</module>
     </modules>
     <packaging>pom</packaging>
 

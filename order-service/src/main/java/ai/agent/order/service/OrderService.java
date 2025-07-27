@@ -2,7 +2,7 @@ package ai.agent.order.service;
 
 import ai.agent.order.mapper.OrderMapper;
 import ai.agent.order.model.OrderInfo;
-import ai.agent.order.model.ProductInfo;
+import ai.agent.product.model.ProductInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
