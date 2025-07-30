@@ -1,0 +1,1 @@
+Non-parseable POM D:\Java\spring-cloud\spring-cloud\pom.xml: Duplicated tag: 'packaging' (position: START_TAG seen ...<!-- \u58f0\u660e\u7236\u5de5\u7a0b\u7684\u6253\u5305\u65b9\u5f0f\u4e3apom -->\n    <packaging>... @19:16) 

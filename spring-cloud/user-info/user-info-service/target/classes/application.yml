@@ -1,0 +1,42 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: user-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 117.72.211.70:8848 #${nacos.address}
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/spring_cloud_user?characterEncoding=utf8&useSSL=false
+    username: root
+    password: 212409 #${mysql.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+logging:
+  file:
+    name: user.log
+#---
+##开发环境
+#spring:
+#  config:
+#    activate:
+#      on-profile: dev
+#nacos:
+#  address: 47.108.157.13:8848
+#mysql:
+#  password: root
+#
+#---
+##生产环境
+#spring:
+#  config:
+#    activate:
+#      on-profile: prod
+#nacos:
+#  address: 127.0.0.1:8848
+#mysql:
+#  password: BITE@yyds.666
