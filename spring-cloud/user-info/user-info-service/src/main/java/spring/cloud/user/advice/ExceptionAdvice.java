@@ -27,8 +27,15 @@ public class ExceptionAdvice {
     public Result verifyHandle(Exception e){
         log.error("参数校验失败: {}", e.getMessage());
         MethodArgumentNotValidException exception = (MethodArgumentNotValidException) e;
-        //未做判空处理, 自行添加
-        String errorMessage = exception.getBindingResult().getFieldError().getDefaultMessage();
+        
+        String errorMessage = "参数校验失败";
+        if (exception.getBindingResult().hasFieldErrors()) {
+            var fieldError = exception.getBindingResult().getFieldError();
+            if (fieldError != null && fieldError.getDefaultMessage() != null) {
+                errorMessage = fieldError.getDefaultMessage();
+            }
+        }
+        
         return Result.fail("参数校验失败:" + errorMessage);
     }
 }
