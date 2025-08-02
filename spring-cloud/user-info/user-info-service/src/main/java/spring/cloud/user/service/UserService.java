@@ -1,5 +1,6 @@
 package spring.cloud.user.service;
 
+import spring.cloud.user.api.pojo.UserInfoRegisterRequest;
 import spring.cloud.user.api.pojo.UserInfoRequest;
 import spring.cloud.user.api.pojo.UserInfoResponse;
 import spring.cloud.user.api.pojo.UserLoginResponse;
@@ -11,5 +12,5 @@ public interface UserService {
 
     UserInfoResponse selectAuthorInfoByBlogId(Integer blogId);
 
-    // Integer register(UserInfoRegisterRequest registerRequest);
+    Integer register(UserInfoRegisterRequest registerRequest);
 }

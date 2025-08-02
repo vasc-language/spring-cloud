@@ -20,6 +20,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import spring.cloud.common.pojo.Result;
 import spring.cloud.common.utils.JWTUtils;
+import spring.cloud.gateway.properties.AuthWhiteNameProperties;
 
 import java.util.List;
 
@@ -33,10 +34,10 @@ public class AuthFilter implements GlobalFilter, Ordered {
     @Autowired
     private ObjectMapper objectMapper;
 
-//    @Autowired
-//    private AuthWhiteName authWhiteName;
+    @Autowired
+    private AuthWhiteNameProperties authWhiteName;
 
-    private List<String> authWhiteName = List.of("/user/login", "/user/register");
+    // private List<String> authWhiteName = List.of("/user/login", "/user/register");
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -44,7 +45,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
         ServerHttpRequest request = exchange.getRequest();
 
         String path = request.getURI().getPath();
-        if (match(path, authWhiteName)) {
+        if (match(path, authWhiteName.getUrl())) {
             //放行
             return chain.filter(exchange);
         }

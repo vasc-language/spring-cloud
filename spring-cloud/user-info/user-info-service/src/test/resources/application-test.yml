@@ -1,0 +1,12 @@
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 1s # 快速超时，避免长时间等待
+      lettuce:
+        pool:
+          max-active: 1
+          max-idle: 1
+          min-idle: 0
+          max-wait: 1s

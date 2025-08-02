@@ -2,11 +2,13 @@ package spring.cloud.user.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.cloud.blog.api.BlogServiceApi;
 import spring.cloud.blog.api.pojo.BlogInfoResponse;
+import spring.cloud.common.constant.Constants;
 import spring.cloud.common.exception.BlogException;
 import spring.cloud.common.pojo.Result;
 import spring.cloud.common.utils.*;
@@ -37,6 +39,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private Redis redis; // 缓存
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate; // 消息队列
 
     @Override
     public UserLoginResponse login(UserInfoRequest user) {
@@ -95,6 +100,9 @@ public class UserServiceImpl implements UserService {
             if (result == 1) {
                 // 存储数据到 redis
                 redis.set(buildKey(userInfo.getUserName()), JsonUtils.toJsonString(userInfo), EXPIRE_TIME);
+                // 发送消息
+                userInfo.setPassword("");
+                rabbitTemplate.convertAndSend(Constants.USER_EXCHANGE_NAME, "", JsonUtils.toJsonString(userInfo));
                 return userInfo.getId();
             } else {
                 throw new BlogException("用户注册失败");

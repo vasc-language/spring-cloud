@@ -33,11 +33,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **白名单机制**: `AuthWhiteNameProperties` 配置免认证路径
 - **统一鉴权**: 所有请求经过网关统一鉴权处理
 
+### 消息队列架构
+- **RabbitMQ 集成**: 异步消息处理和服务解耦
+- **队列配置**: `RabbitConfig` 定义持久化队列和交换机
+- **消息监听**: `@RabbitListener` 注解实现消息消费
+- **消息发送**: `RabbitTemplate` 提供消息发送能力
+- **手动确认模式**: 确保消息可靠处理
+
 ### 公共组件设计
 - **工具类封装**: `Redis`, `JsonUtils`, `JWTUtils`, `SecurityUtil` 等
 - **自动配置**: `RedisConfig` 提供条件化的 Redis Bean 配置
 - **统一异常**: `BlogException` 和全局异常处理机制
 - **参数校验**: `RegexUtil` 提供邮箱、URL 等格式校验
+- **常量定义**: `Constants` 类统一管理队列和交换机名称
 
 ## 技术栈
 
@@ -48,6 +56,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **MyBatis** 3.0.3 & **MyBatis Plus** 3.5.5
 - **MySQL** 8.0.33
 - **Redis** (本地部署 127.0.0.1:6379)
+- **RabbitMQ** (远程部署 117.72.211.70:5672/blog)
 - **Nacos** 服务注册与配置中心
 - **Spring Cloud Gateway** 微服务网关
 - **OpenFeign** 服务间调用
@@ -152,6 +161,13 @@ curl http://localhost:8080/actuator/health  # 用户服务
 3. 服务发现定位: `user-service`
 4. 执行远程调用获取用户信息
 
+### 消息队列处理流程
+1. 消息发送: `RabbitTemplate.convertAndSend(exchange, routingKey, message)`
+2. 队列路由: 消息通过交换机路由到目标队列
+3. 监听器接收: `@RabbitListener(queues = "queueName")` 自动监听
+4. 消息处理: 业务逻辑处理接收到的消息
+5. 手动确认: 处理完成后手动确认消息
+
 ## 关键代码模式
 
 ### Redis 缓存模式
@@ -184,6 +200,29 @@ public Redis redis(StringRedisTemplate redisTemplate) {
 }
 ```
 
+### RabbitMQ 队列配置模式
+```java
+// 队列配置 (RabbitConfig)
+@Bean("hello")
+public Queue queue() {
+    return QueueBuilder.durable("hello").build();
+}
+
+// 消息监听器 (HelloQueueListener)
+@RabbitListener(queues = "hello")
+public void handler(Message message){
+    System.out.println("收到消息:" + message);
+}
+
+// 消息发送 (RabbitMQTest)
+@Autowired
+private RabbitTemplate rabbitTemplate;
+
+public void sendMessage() {
+    rabbitTemplate.convertAndSend("", "hello", "hello rabbitmq~");
+}
+```
+
 ## 环境配置要求
 
 ### 数据库配置
@@ -197,6 +236,14 @@ public Redis redis(StringRedisTemplate redisTemplate) {
 - 连接池配置: 最大连接数8，最大空闲连接8
 - 超时设置: 60秒空闲自动关闭
 - 用于用户会话缓存和热点数据存储
+
+### RabbitMQ 消息队列配置
+- **RabbitMQ 服务器**: `117.72.211.70:5672`
+- **虚拟主机**: `/blog`
+- **认证信息**: 用户名/密码 `bite:bite`
+- **连接地址**: `amqp://bite:bite@117.72.211.70:5672/blog`
+- **确认模式**: 手动确认 (`acknowledge-mode: manual`)
+- **队列类型**: 持久化队列，服务器重启后保持存在
 
 ### 外部依赖服务
 - **Nacos 注册中心**: `117.72.211.70:8848`
@@ -225,6 +272,13 @@ public Redis redis(StringRedisTemplate redisTemplate) {
 1. 修改 `AuthFilter` 实现新的过滤规则
 2. 在 `AuthWhiteNameProperties` 中配置白名单路径
 3. 确保过滤器实现 `Ordered` 接口控制执行顺序
+
+### 新增消息队列功能
+1. 在 `RabbitConfig` 中定义新的队列和交换机 Bean
+2. 在 `Constants` 类中添加队列和交换机名称常量
+3. 创建消息监听器类并使用 `@RabbitListener` 注解
+4. 使用 `RabbitTemplate` 发送消息到指定队列
+5. 配置适当的确认模式和错误处理机制
 
 ## 性能监控与可观测性
 

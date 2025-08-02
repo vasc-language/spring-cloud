@@ -1,2 +1,2 @@
-com.bite.common.config.RedisConfig
-com.bite.common.config.MailConfig
+spring.cloud.common.config.RedisConfig
+spring.cloud.common.config.MailConfig

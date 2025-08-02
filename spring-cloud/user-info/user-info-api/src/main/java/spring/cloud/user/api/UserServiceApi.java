@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import spring.cloud.common.pojo.Result;
+import spring.cloud.user.api.pojo.UserInfoRegisterRequest;
 import spring.cloud.user.api.pojo.UserInfoRequest;
 import spring.cloud.user.api.pojo.UserInfoResponse;
 import spring.cloud.user.api.pojo.UserLoginResponse;
@@ -23,6 +24,6 @@ public interface UserServiceApi {
     @RequestMapping("/getAuthorInfo")
     Result<UserInfoResponse> getAuthorInfo(@RequestParam("blogId") Integer blogId);
 
-    // @RequestMapping("/register")
-    // Result<Integer> register(@RequestBody UserInfoRegisterRequest registerRequest);
+    @RequestMapping("/register")
+    Result<Integer> register(@RequestBody UserInfoRegisterRequest registerRequest);
 }
