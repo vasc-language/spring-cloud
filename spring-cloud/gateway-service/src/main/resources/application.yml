@@ -17,30 +17,33 @@ spring:
           uri: lb://blog-service
           predicates:
             - Path=/blog/**
-#      # 网关全局跨域配置
-#      globalcors:
-#        # 解决options请求被拦截的问题
-#        add-to-simple-url-handler-mapping: true
-#        cors-configurations:
-#          '[/**]':
-#            allowedOriginPatterns: "*"     #设置允许跨域的来源
-#            allowedMethods: "*"
-#            allowedHeaders: "*"
-#            allowCredentials: true
-#---
-##开发环境
-#spring:
-#  config:
-#    activate:
-#      on-profile: dev
-#nacos:
-#  address: 47.108.157.13:8848
-#
-#---
-##生产环境
-#spring:
-#  config:
-#    activate:
-#      on-profile: prod
-#nacos:
-#  address: 127.0.0.1:8848
+      # 网关全局跨域配置
+      globalcors:
+        # 解决options请求被拦截的问题
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns: "*"     #设置允许跨域的来源
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true
+logging:
+  file:
+    name: gateway.log
+---
+#开发环境
+spring:
+  config:
+    activate:
+      on-profile: dev
+nacos:
+  address: 117.72.211.70:8848
+
+---
+#生产环境
+spring:
+  config:
+    activate:
+      on-profile: prod
+nacos:
+  address: 127.0.0.1:8848
